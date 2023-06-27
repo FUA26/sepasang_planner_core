@@ -1,0 +1,19 @@
+version: '3'
+services:
+  core-sepasang:
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+    container_name: core-sepasang-prod
+    restart: always
+    ports:
+      - 3200:3200
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    networks:
+      - SJ-NETWORK-CORE  
+
+networks:
+  SJ-NETWORK-CORE:
