@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String    @db.VarChar(255)
+  description String    @db.VarChar(255)
+  status      Int?
+  createdAt   DateTime  @default(now()) @db.DateTime(0)
+  updatedAt   DateTime? @db.DateTime(0)
+  dueDate     DateTime? @db.DateTime(0)
+  archived    Int       @default(0) @db.TinyInt
+  creatorId   Int?
+  categoryId  Int?
+  user        User?     @relation(fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_task_user_id")
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_task_category_id")
+
+  @@index([creatorId], map: "fk_task_user_id")
+  @@index([categoryId], map: "fk_task_category_id")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  firstName    String    @db.VarChar(255)
+  lastName     String    @db.VarChar(255)
+  email        String    @db.VarChar(255)
+  hashPassword String?   @db.VarChar(255)
+  hashToken    String?   @db.VarChar(255)
+  isActive     Int       @default(1) @db.TinyInt
+  createdAt    DateTime  @default(now()) @db.DateTime(0)
+  updatedAt    DateTime? @db.DateTime(0)
+  task         Task[]
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  title     String    @db.VarChar(255)
+  isActive  Int       @default(1) @db.TinyInt
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  updatedAt DateTime? @db.DateTime(0)
+  task      Task[]
+}
