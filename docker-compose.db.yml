@@ -1,22 +1,5 @@
 version: '3'
 services:
-  sp-core-api-dev:
-    build:
-      context: .
-      dockerfile: dev.Dockerfile
-    container_name: sp-core-api-dev
-    restart: always
-    ports:
-      - 3200:3200
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    links:
-      - sp-mysql-dev
-    networks:
-      - sp-networks-core  
-       
   sp-mysql-dev:
     image: mysql:8
     container_name: sp-mysql-dev
