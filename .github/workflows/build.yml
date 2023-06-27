@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - 'main-*'
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CD_KEYS }}
+
+      - name: Extract repository name
+        run: |
+          REPO_NAME=$(basename "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "Repository Name: $REPO_NAME"
+
+      - name: Build and push Docker image
+        run: |
+          export DOCKER_BUILDKIT=1
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          TAG_NAME=$(echo "${{ github.ref }}" | sed -e "s|refs/tags/main-||" | tr '/' '-')
+          REPO_NAME=$(basename "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker build -f prod.Dockerfile -t ghcr.io/${REPO_OWNER}/${REPO_NAME}:${TAG_NAME} .
+          docker push ghcr.io/${REPO_OWNER}/${REPO_NAME}:${TAG_NAME}
