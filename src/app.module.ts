@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from 'prisma/prisma.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './module/auth/auth.module';
+import { CategoryModule } from './module/category/category.module';
 import appConfig from './configs/app.config';
 
 @Module({
@@ -13,8 +13,10 @@ import appConfig from './configs/app.config';
       load: [appConfig],
       envFilePath: ['.env'],
     }),
+    AuthModule,
+    CategoryModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
