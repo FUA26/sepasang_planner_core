@@ -34,10 +34,9 @@ jobs:
           TAG_NAME=$(echo "${{ github.ref }}" | sed -e 's,refs/tags/,,')
           docker push $REGISTRY/$REPO_NAME:$TAG_NAME
 
-  publish:
-    runs-on: ubuntu-latest
-
+  update-latest-tag:
     needs: build
+    runs-on: ubuntu-latest
 
     steps:
       - name: Login to Docker Registry
@@ -49,6 +48,8 @@ jobs:
 
       - name: Update Latest Tag
         run: |
-          docker pull ${{ env.REGISTRY }}/${{ github.repository | lower }}:${{ github.ref | replace('refs/tags/', '') }}
-          docker tag ${{ env.REGISTRY }}/${{ github.repository | lower }}:${{ github.ref | replace('refs/tags/', '') }} ${{ env.REGISTRY }}/${{ github.repository | lower }}:${{ env.LATEST_TAG }}
-          docker push ${{ env.REGISTRY }}/${{ github.repository | lower }}:${{ env.LATEST_TAG }}
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          TAG_NAME=$(echo "${{ github.ref }}" | sed -e 's,refs/tags/,,')
+          docker pull $REGISTRY/$REPO_NAME:$TAG_NAME
+          docker tag $REGISTRY/$REPO_NAME:$TAG_NAME $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
+          docker push $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
