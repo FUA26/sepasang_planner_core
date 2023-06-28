@@ -38,10 +38,7 @@ jobs:
           docker push $REGISTRY/$REPO_NAME:$TAG_NAME
           docker image tag $REGISTRY/$REPO_NAME:$TAG_NAME $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
           docker push $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
-  deploy-prod:
-    runs-on: ubuntu-latest
 
-    steps:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
@@ -53,4 +50,4 @@ jobs:
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml pull
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml down
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml up -d --build
-    when: manual
+  
