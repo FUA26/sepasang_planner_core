@@ -28,12 +28,6 @@ jobs:
           TAG_NAME=$(echo "${{ github.ref }}" | sed -e 's,refs/tags/,,')
           docker build -t $REGISTRY/$REPO_NAME:$TAG_NAME -f prod.Dockerfile --build-arg TAG=$TAG_NAME .
 
-      - name: Push Docker Image
-        run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          TAG_NAME=$(echo "${{ github.ref }}" | sed -e 's,refs/tags/,,')
-          docker push $REGISTRY/$REPO_NAME:$TAG_NAME
-
   update-latest-tag:
     needs: build
     runs-on: ubuntu-latest
@@ -50,6 +44,6 @@ jobs:
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           TAG_NAME=$(echo "${{ github.ref }}" | sed -e 's,refs/tags/,,')
-          docker pull $REGISTRY/$REPO_NAME:$TAG_NAME
+          docker push $REGISTRY/$REPO_NAME:$TAG_NAME
           docker tag $REGISTRY/$REPO_NAME:$TAG_NAME $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
           docker push $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
