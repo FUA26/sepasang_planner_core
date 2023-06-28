@@ -53,4 +53,3 @@ jobs:
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml pull
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml down
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml up -d --build
-    when: manual
