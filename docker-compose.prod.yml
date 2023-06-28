@@ -1,9 +1,7 @@
 version: '3'
 services:
   core-sepasang:
-    build:
-      context: .
-      dockerfile: prod.Dockerfile
+    image: ${DOCKER_IMAGE}
     container_name: core-sepasang-prod
     restart: always
     ports:
