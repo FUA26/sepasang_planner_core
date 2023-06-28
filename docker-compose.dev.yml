@@ -1,0 +1,42 @@
+version: '3'
+services:
+  sp-core-api-dev:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    container_name: sp-core-api-dev
+    restart: always
+    ports:
+      - 3200:3200
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    links:
+      - sp-mysql-dev
+    networks:
+      - sp-networks-core  
+       
+  sp-mysql-dev:
+    image: mysql:8
+    container_name: sp-mysql-dev
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SERVICE_NAME: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - sp-mysql-core:/var/lib/mysql
+    networks:
+      - sp-networks-core
+
+volumes:
+  sp-mysql-core:
+
+networks:
+  sp-networks-core:
