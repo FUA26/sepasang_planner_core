@@ -38,7 +38,9 @@ jobs:
           docker push $REGISTRY/$REPO_NAME:$TAG_NAME
           docker image tag $REGISTRY/$REPO_NAME:$TAG_NAME $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
           docker push $REGISTRY/$REPO_NAME:${{ env.LATEST_TAG }}
+
   deploy-prod:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
