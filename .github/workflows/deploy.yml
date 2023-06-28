@@ -23,6 +23,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             docker login ghcr.io -u ${{ env.GHRC_USER }} -p ${{ env.GHRC_PASS }}
+            echo "Secrets PATH: ${{ secrets.PATH }}"
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml pull
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml down
             cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml up -d --build
