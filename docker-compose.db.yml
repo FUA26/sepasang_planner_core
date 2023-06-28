@@ -16,10 +16,10 @@ services:
     volumes:
       - sp-mysql-core:/var/lib/mysql
     networks:
-      - sp-networks-core
+      - SJ-NETWORK-CORE  
+
+networks:
+  SJ-NETWORK-CORE:
 
 volumes:
   sp-mysql-core:
-
-networks:
-  sp-networks-core:
