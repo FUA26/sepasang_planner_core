@@ -44,15 +44,12 @@ jobs:
     steps:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.CD_KEYS }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.CD_KEYS }}
+          docker login ghcr.io -u ${{ env.GHRC_USER }} -p ${{ env.GHRC_PASS }}
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml pull
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml down
           cd ${{ secrets.PATH }} && docker-compose -f docker-compose.prod.yml up -d --build
