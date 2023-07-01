@@ -1,3 +1,4 @@
+import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -7,6 +8,9 @@ import { AllConfigType } from './configs/config.type';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService) as ConfigService<AllConfigType>;
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
   const options = new DocumentBuilder()
     .setTitle('API')
     .setDescription('API docs')

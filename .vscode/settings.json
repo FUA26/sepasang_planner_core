@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "Base",
         "database",
-        "ci"
+        "ci",
+        "feat"
     ]
 }

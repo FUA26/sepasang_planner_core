@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
 import { requestPaginated } from 'src/utils/dto/requestPaginated.dto';
@@ -17,10 +8,11 @@ import {
   StartEndHelper,
 } from 'src/utils/helper/pagination.helper';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@Controller('category')
+@Controller({
+  path: 'category',
+  version: '1',
+})
 @ApiTags('Category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
