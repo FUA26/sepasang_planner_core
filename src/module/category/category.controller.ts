@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
 import { requestPaginated } from 'src/utils/dto/requestPaginated.dto';
 import { PaginatedDto, PaginationMeta } from 'src/utils/dto/response.dto';
+import { JwtAuthGuard } from 'src/utils/guard/jwt-auth.guard';
 import {
   NextPrevHelper,
   StartEndHelper,
@@ -14,6 +15,8 @@ import { CategoryService } from './category.service';
   version: '1',
 })
 @ApiTags('Category')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
