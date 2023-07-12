@@ -7,7 +7,7 @@ services:
     container_name: core-sepasang-stg
     restart: always
     ports:
-      - 3200:3200
+      - ${APP_PORT_EXT}:${APP_PORT}
     volumes:
       - .:/app
     env_file:

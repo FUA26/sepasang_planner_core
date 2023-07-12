@@ -12,7 +12,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       SERVICE_NAME: mysql
     ports:
-      - 3306:3306
+      - ${MYSQL_PORT}:3306
     volumes:
       - sp-mysql-core:/var/lib/mysql
     networks:
