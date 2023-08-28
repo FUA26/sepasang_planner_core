@@ -13,6 +13,7 @@ export class JwtAuthStrategy extends PassportStrategy(
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request) => {
           const bearerToken = request.headers.authorization;
+
           if (bearerToken && bearerToken.startsWith('Bearer ')) {
             return bearerToken.split(' ')[1];
           }
@@ -26,7 +27,7 @@ export class JwtAuthStrategy extends PassportStrategy(
   }
 
   async validate(request: Request, payload: any) {
-    console.log('validate', payload);
+    // console.log('validate', payload);
     if (payload === null) {
       throw new UnauthorizedException();
     }

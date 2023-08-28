@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
 import { requestPaginated } from 'src/utils/dto/requestPaginated.dto';
 import { PaginatedDto, PaginationMeta } from 'src/utils/dto/response.dto';
@@ -8,11 +8,18 @@ import {
   StartEndHelper,
 } from 'src/utils/helper/pagination.helper';
 import { CategoryService } from './category.service';
+import { JwtAuthGuard } from 'src/utils/guard/jwt-auth.guard';
+import { Roles } from '../roles/roles.decorator';
+import { RolesGuard } from '../roles/roles.guard';
+import { RoleEnum } from '../roles/roles.enum';
 
 @Controller({
   path: 'category',
   version: '1',
 })
+// @Roles(RoleEnum.USER)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('Category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

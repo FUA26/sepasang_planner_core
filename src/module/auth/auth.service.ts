@@ -50,6 +50,7 @@ export class AuthService {
       firdtName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      role: user.role,
     };
     const token = await this.getJwtToken(payload);
     const hashedToken = await bcrypt.hash(token.refreshToken, 10);
@@ -109,6 +110,7 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      role: user.role,
     };
 
     const tokens = await this.getJwtToken(payload);
