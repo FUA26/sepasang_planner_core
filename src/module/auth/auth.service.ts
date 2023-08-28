@@ -35,6 +35,7 @@ export class AuthService {
         email: createDto.email,
         password: hashedPassword,
         hashToken: '',
+        role: 'USER',
       },
     });
     const clientClean = Excluder(user, ['password', 'hashToken']);
@@ -72,17 +73,19 @@ export class AuthService {
       where: { email },
     });
     if (!getUser) {
-      throw new HttpException('message', HttpStatus.BAD_REQUEST, {
-        cause: new Error('Some Error'),
-      });
+      throw new HttpException(
+        'Email dan Kata Sandi Tidak Sesuai',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const isValidPassword = await bcrypt.compare(password, getUser.password);
 
     if (!isValidPassword) {
-      throw new HttpException('message', HttpStatus.BAD_REQUEST, {
-        cause: new Error('Some Error'),
-      });
+      throw new HttpException(
+        'Email dan Kata Sandi Tidak Sesuai',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return getUser;
   }

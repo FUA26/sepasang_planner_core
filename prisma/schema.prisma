@@ -36,6 +36,7 @@ model User {
   email       String    @db.VarChar(255)
   password    String?   @db.VarChar(255)
   hashToken   String?   @db.VarChar(255)
+  role        Role
   phoneNumber String?   @db.VarChar(255)
   status      Int       @default(1) @db.TinyInt
   createdAt   DateTime  @default(now()) @db.DateTime(0)
@@ -50,4 +51,9 @@ model Category {
   createdAt DateTime  @default(now()) @db.DateTime(0)
   updatedAt DateTime? @db.DateTime(0)
   task      Task[]
+}
+
+enum Role {
+  ADMIN
+  USER
 }
