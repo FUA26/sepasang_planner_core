@@ -19,7 +19,7 @@ import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { ResponseDto } from './dto/login-response.dto';
 
 @Controller({
-  path: 'Auth',
+  path: 'auth',
   version: '1',
 })
 @ApiTags('Auth')
@@ -35,7 +35,9 @@ export class AuthController {
     @Body() loginDto: AuthEmailLoginDto,
     @Res() res,
   ): Promise<ResponseDto> {
+    console.log(loginDto);
     const userData = await this.authService.validateLogin(loginDto);
+    console.log(userData);
     res.cookie('RefreshToken', userData.refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,

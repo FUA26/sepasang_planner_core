@@ -4,6 +4,7 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { AuthModule } from './module/auth/auth.module';
 import { CategoryModule } from './module/category/category.module';
 import { UserModule } from './module/user/user.module';
+import { TaskModule } from './module/task/task.module';
 import appConfig from './configs/app.config';
 import authConfig from './configs/auth.config';
 
@@ -18,6 +19,7 @@ import authConfig from './configs/auth.config';
     AuthModule,
     CategoryModule,
     UserModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [],

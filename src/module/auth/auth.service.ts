@@ -3,10 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'prisma/prisma.service';
-import { Excluder } from 'src/utils/helper/exluder.helper';
-
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
+import { Excluder } from 'src/helper/exluder.helper';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +19,7 @@ export class AuthService {
     });
 
     if (checkUser) {
-      console.log(checkUser);
+      // console.log(checkUser);
       throw new HttpException('message', HttpStatus.BAD_REQUEST, {
         cause: new Error('User already exists'),
       });
@@ -43,8 +42,9 @@ export class AuthService {
   }
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<any> {
+    console.log('login valid', loginDto);
     const user = await this.validateUser(loginDto.email, loginDto.password);
-
+    console.log('login valid', loginDto, user);
     const payload = {
       sub: user.id,
       firdtName: user.firstName,
@@ -73,6 +73,7 @@ export class AuthService {
     const getUser = await this.prisma.user.findFirst({
       where: { email },
     });
+    // console.log(getUser);
     if (!getUser) {
       throw new HttpException(
         'Email dan Kata Sandi Tidak Sesuai',
@@ -97,7 +98,7 @@ export class AuthService {
     });
 
     const isValidToken = await bcrypt.compare(token, user.hashToken);
-    console.log(isValidToken);
+    // console.log(isValidToken);
 
     if (!isValidToken) {
       throw new HttpException('message', HttpStatus.BAD_REQUEST, {

@@ -3,10 +3,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
 import { requestPaginated } from 'src/utils/dto/requestPaginated.dto';
 import { PaginatedDto, PaginationMeta } from 'src/utils/dto/response.dto';
-import {
-  NextPrevHelper,
-  StartEndHelper,
-} from 'src/utils/helper/pagination.helper';
+
 import { CategoryService } from './category.service';
 import { JwtAuthGuard } from 'src/utils/guard/jwt-auth.guard';
 import { Roles } from '../roles/roles.decorator';
@@ -55,4 +52,15 @@ export class CategoryController {
 
     return response;
   }
+}
+function StartEndHelper(record: number, page: number) {
+  throw new Error('Function not implemented.');
+}
+
+function NextPrevHelper(
+  count: any,
+  record: number,
+  page: number,
+): PaginationMeta | PromiseLike<PaginationMeta> {
+  throw new Error('Function not implemented.');
 }
