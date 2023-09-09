@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'prisma/prisma.service';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
@@ -9,7 +10,11 @@ import { Excluder } from 'src/helper/exluder.helper';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
 
   async register(
     createDto: AuthRegisterLoginDto,
@@ -42,9 +47,8 @@ export class AuthService {
   }
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<any> {
-    console.log('login valid', loginDto);
     const user = await this.validateUser(loginDto.email, loginDto.password);
-    console.log('login valid', loginDto, user);
+
     const payload = {
       sub: user.id,
       firdtName: user.firstName,
@@ -77,7 +81,7 @@ export class AuthService {
     if (!getUser) {
       throw new HttpException(
         'Email dan Kata Sandi Tidak Sesuai',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.UNAUTHORIZED,
       );
     }
 
@@ -86,7 +90,7 @@ export class AuthService {
     if (!isValidPassword) {
       throw new HttpException(
         'Email dan Kata Sandi Tidak Sesuai',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.UNAUTHORIZED,
       );
     }
     return getUser;
@@ -128,7 +132,7 @@ export class AuthService {
       this.jwtService.sign(payload),
       this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET,
-        expiresIn: '1d',
+        expiresIn: this.configService.get('auth.refresh_exp'),
       }),
     ]);
     return {

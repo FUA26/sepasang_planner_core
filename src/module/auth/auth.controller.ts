@@ -6,6 +6,7 @@ import {
   UseGuards,
   Res,
   Req,
+  Version,
 } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -17,19 +18,22 @@ import { AuthService } from './auth.service';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { ResponseDto } from './dto/login-response.dto';
+import { maxAge } from 'src/const/auth';
 
 @Controller({
   path: 'auth',
-  version: '1',
 })
 @ApiTags('Auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Version('1')
   @Post('register')
   async register(@Body() registerDto: AuthRegisterLoginDto): Promise<any> {
     return await this.authService.register(registerDto);
   }
 
+  @Version('1')
   @Post('login')
   async login(
     @Body() loginDto: AuthEmailLoginDto,
@@ -37,10 +41,9 @@ export class AuthController {
   ): Promise<ResponseDto> {
     console.log(loginDto);
     const userData = await this.authService.validateLogin(loginDto);
-    console.log(userData);
     res.cookie('RefreshToken', userData.refreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: maxAge,
     });
 
     return res.send({
@@ -49,6 +52,7 @@ export class AuthController {
     });
   }
 
+  @Version('1')
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   async refresh(@Req() req, @Res() res) {
@@ -64,6 +68,7 @@ export class AuthController {
     return res.send({ accessToken: token.accessToken });
   }
 
+  @Version('1')
   @ApiBearerAuth()
   @UseGuards(JwtRefreshGuard)
   @Post('logout')
@@ -76,5 +81,28 @@ export class AuthController {
     });
 
     return res.status(200).send({ message: 'Logout successful' });
+  }
+
+  @Version('2')
+  @Post('login')
+  async login2(
+    @Body() loginDto: AuthEmailLoginDto,
+    @Res() res,
+  ): Promise<ResponseDto> {
+    const userData = await this.authService.validateLogin(loginDto);
+
+    // res.cookie('RefreshToken', userData.refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
+
+    return res.send({
+      user: userData.data,
+      credential: {
+        accessToken: userData.accessToken,
+        refreshToken: userData.refreshToken,
+        exp: new Date().setTime(new Date().getTime() + maxAge),
+      },
+    });
   }
 }

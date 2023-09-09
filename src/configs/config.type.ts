@@ -10,6 +10,7 @@ export type AppConfig = {
 export type AuthConfig = {
   secret?: string;
   expires?: string;
+  refresh_exp?: string;
 };
 
 export type AllConfigType = {
